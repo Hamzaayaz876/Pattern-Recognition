@@ -1,0 +1,10 @@
+Linear SVM best parameters: {'C': 0.1}
+Linear SVM cross-validation accuracy: 0.9116
+Linear SVM validation accuracy: 0.9297
+
+RBF SVM best parameters: {'C': 10, 'gamma': 'auto'}
+RBF SVM cross-validation accuracy: 0.9431
+RBF SVM validation accuracy: 0.9695
+
+Best model: RBF SVM
+Test accuracy: 0.9714
