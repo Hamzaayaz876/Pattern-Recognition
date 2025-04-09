@@ -131,7 +131,21 @@ def train_single_combination(kernel_size, num_layers, lr, num_epochs=5):
         val_accs.append(correct / total)
         val_losses.append(val_loss / total)
 
-    return train_accs, val_accs, train_losses, val_losses
+    # Test accuracy hesapla
+    model.eval()
+    all_preds = []
+    all_labels = []
+    with torch.no_grad():
+        for images, labels in test_loader:
+            images, labels = images.to(device), labels.to(device)
+            outputs = model(images)
+            _, predicted = torch.max(outputs, 1)
+            all_preds.extend(predicted.cpu().numpy())
+            all_labels.extend(labels.cpu().numpy())
+
+    test_acc = accuracy_score(all_labels, all_preds)
+
+    return train_accs, val_accs, train_losses, val_losses, test_acc
 
 ################################################
 # 7. Hyperparameter Combinations
@@ -147,7 +161,7 @@ results = []
 
 for k_size, n_layer, lr in param_grid:
     print(f"\n Training with kernel={k_size}, layers={n_layer}, lr={lr}")
-    train_accs, val_accs, train_losses, val_losses = train_single_combination(k_size, n_layer, lr, num_epochs)
+    train_accs, val_accs, train_losses, val_losses, test_acc = train_single_combination(k_size, n_layer, lr, num_epochs)
     best_val_acc = max(val_accs)
     results.append({
         "kernel_size": k_size,
@@ -157,7 +171,8 @@ for k_size, n_layer, lr in param_grid:
         "train_accs": train_accs,
         "val_accs": val_accs,
         "train_losses": train_losses,
-        "val_losses": val_losses
+        "val_losses": val_losses,
+        "test_acc": test_acc
     })
 
 ################################################
@@ -168,26 +183,26 @@ df_results = pd.DataFrame([{
     "Kernel Size": r["kernel_size"],
     "Num Layers": r["num_layers"],
     "Learning Rate": r["lr"],
-    "Best Val Accuracy": round(r["best_val_acc"], 4)
+    "Best Val Accuracy": round(r["best_val_acc"], 4),
+    "Test Accuracy": round(r["test_acc"], 4)
 } for r in results])
 
-print("\n Grid Search Results:")
+print("\n Grid Search Results (Sorted by Val Acc):")
 print(df_results.sort_values(by="Best Val Accuracy", ascending=False))
 
-
-
 ################################################
-# 9. Grafik: Accuracy & Loss – Training & Validation
+# 9. Grafik: Accuracy & Loss – Training & Validation + Test
 ################################################
 
 for r in results:
     label = f"k={r['kernel_size']}, l={r['num_layers']}, lr={r['lr']}"
-
+    
     # Accuracy
-    plt.figure(figsize=(10, 4))
+    plt.figure(figsize=(12, 4))
     plt.subplot(1, 2, 1)
     plt.plot(r["train_accs"], label="Train Acc")
     plt.plot(r["val_accs"], label="Val Acc")
+    plt.axhline(y=r["test_acc"], color='r', linestyle='--', label=f"Test Acc: {r['test_acc']:.2f}")
     plt.title(f"Accuracy - {label}")
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy")
