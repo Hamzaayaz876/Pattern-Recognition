@@ -4,9 +4,9 @@ import xml.etree.ElementTree as ET
 import os
 import time
 
-path_images = "../documents/binarized_images/"
-path_shape_of_images = "../documents/word_images/"
-path_locations = "../documents/ground-truth/locations/"
+path_images = "documents/binarized_images/"
+path_shape_of_images = "documents/ww/"
+path_locations = "documents/ground-truth/locations/"
 nb_words = 3726  # adjust if needed based on actual number of words
 
 # Create word image directory if it doesn't exist
@@ -41,7 +41,7 @@ if nb_words != len([name for name in os.listdir(path_shape_of_images) if os.path
     list_path_doc = []
 
     # Updated range for your documents
-    for i in range(305, 310):  # 305 to 309 inclusive
+    for i in range(305, 309):  # 305 to 309 inclusive
         list_path_svg.append(f"{path_locations}{i}.svg")
         list_path_doc.append(f"{i}b.jpg")  # matches your binarized images
 

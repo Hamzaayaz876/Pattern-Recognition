@@ -5,9 +5,9 @@ import os
 import time
 
 # Configuration
-INPUT_DIR = "../documents/original_images/"
-OUTPUT_DIR = "../documents/binarized_images/"
-IMAGE_RANGE = range(305, 310)  # Only process 305-309
+INPUT_DIR = "documents/original_images/"
+OUTPUT_DIR = "documents/binarized_images/"
+IMAGE_RANGE = range(305, 309)  # Only process 305-309
 WINDOW_SIZE = 15  # Sauvola window size
 K = 0.06         # Sauvola k parameter
 
