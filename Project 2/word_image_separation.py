@@ -5,9 +5,9 @@ import os
 import time
 
 path_images = "documents/binarized_images/"
-path_shape_of_images = "documents/ww/"
+path_shape_of_images = "documents/word_images/"
 path_locations = "documents/ground-truth/locations/"
-nb_words = 3726  # adjust if needed based on actual number of words
+nb_words = 37269999  # adjust if needed based on actual number of words
 
 # Create word image directory if it doesn't exist
 if not os.path.exists(path_shape_of_images):
@@ -41,9 +41,10 @@ if nb_words != len([name for name in os.listdir(path_shape_of_images) if os.path
     list_path_doc = []
 
     # Updated range for your documents
-    for i in range(305, 309):  # 305 to 309 inclusive
-        list_path_svg.append(f"{path_locations}{i}.svg")
-        list_path_doc.append(f"{i}b.jpg")  # matches your binarized images
+    for i in range(270, 310):  
+        if 270 <= i <= 279 or 300 <= i <= 310:
+            list_path_svg.append(f"{path_locations}{i}.svg")
+            list_path_doc.append(f"{i}b.jpg")  # matches your binarized images
 
     for ind, page in enumerate(list_path_svg):
         tree = ET.parse(page)
@@ -77,7 +78,7 @@ if nb_words != len([name for name in os.listdir(path_shape_of_images) if os.path
 
         for i in range(len(all_coordinates_of_words)):
             crop_words(list_path_doc, ind, i, all_coordinates_of_words, all_word_box, words_id)
-        print(f"✅ All words of document #{305 + ind} have been cropped.")
+        print(f"✅ All words of document #{270 + ind} have been cropped.")
 
     print("✅ Cropping process finished in {} seconds".format(round(time.time() - start)))
 else:
